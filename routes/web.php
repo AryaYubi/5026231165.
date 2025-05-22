@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DosenController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\BlogController;
+
 //import java.io;
 
 /*
@@ -15,6 +19,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 //System.out.println("Hello World");
+
+Route::get('dosen', [DosenController::class, 'index']);
+
+Route::get('welcome', [DosenController::class, 'welcome']);
+
+Route::get('/pegawai/{nama}', [PegawaiController::class, 'index']);
+Route::get('/formulir', [PegawaiController::class, 'formulir']);
+Route::post('/formulir/proses', [PegawaiController::class, 'proses']);
+
+
+// route blog
+Route::get('/blogs', [BlogController::class, 'home']);
+Route::get('/blogs/tentang', [BlogController::class, 'tentang']);
+Route::get('/blogs/kontak', [BlogController::class, 'kontak']);
 
 Route::get('/', function () {
     return view('welcome');
@@ -72,3 +90,5 @@ Route::get('frontend', function () {
 Route::get('danantara', function () {
 	return view('indexdanan');
 });
+
+
