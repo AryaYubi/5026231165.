@@ -5,6 +5,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\PegawaiDBController;
+use App\Http\Controllers\MonitorController;
 //import java.io;
 
 /*
@@ -104,3 +105,12 @@ Route::get('/pegawai/cari', [PegawaiDBController::class, 'cari']);
 Route::get('template', function () {
 	return view('template');
 });
+
+
+Route::get('/monitor', [MonitorController::class, 'indexcrud']);
+Route::get('/monitor/tambah', [MonitorController::class, 'tambah']);
+Route::post('/monitor/store', [MonitorController::class, 'store']);
+Route::get('/monitor/edit/{id}', [MonitorController::class, 'edit']);
+Route::post('/monitor/update', [MonitorController::class, 'update']);
+Route::get('/monitor/hapus/{id}', [MonitorController::class, 'hapus']);
+Route::get('/monitor/cari', [MonitorController::class, 'cari']);
