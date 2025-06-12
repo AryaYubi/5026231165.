@@ -6,6 +6,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\PegawaiDBController;
 use App\Http\Controllers\MonitorController;
+use App\Http\Controllers\KaryawanController;
 //import java.io;
 
 /*
@@ -114,3 +115,14 @@ Route::get('/monitor/edit/{id}', [MonitorController::class, 'edit']);
 Route::post('/monitor/update', [MonitorController::class, 'update']);
 Route::get('/monitor/hapus/{id}', [MonitorController::class, 'hapus']);
 Route::get('/monitor/cari', [MonitorController::class, 'cari']);
+
+
+
+
+Route::get('/karyawan', [KaryawanController::class, 'index']);
+Route::get('/karyawan/create', [KaryawanController::class, 'create']);
+Route::post('/karyawan', [KaryawanController::class, 'store']);
+Route::get('/karyawan/edit/{id}', [KaryawanController::class, 'edit']);
+Route::post('/karyawan/update', [KaryawanController::class, 'update']);
+Route::get('/karyawan/hapus/{id}', [KaryawanController::class, 'destroy']);
+Route::get('/karyawan/cari', [KaryawanController::class, 'cari']);
