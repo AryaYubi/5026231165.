@@ -126,3 +126,8 @@ Route::get('/karyawan/edit/{id}', [KaryawanController::class, 'edit']);
 Route::post('/karyawan/update', [KaryawanController::class, 'update']);
 Route::get('/karyawan/hapus/{id}', [KaryawanController::class, 'destroy']);
 Route::get('/karyawan/cari', [KaryawanController::class, 'cari']);
+
+
+use App\Http\Controllers\PageCounterController;
+
+Route::get('/latihan1', [PageCounterController::class, 'index']);
