@@ -131,3 +131,10 @@ Route::get('/karyawan/cari', [KaryawanController::class, 'cari']);
 use App\Http\Controllers\PageCounterController;
 
 Route::get('/latihan1', [PageCounterController::class, 'index']);
+
+
+use App\Http\Controllers\NilaiController;
+
+Route::get('/eas', [NilaiController::class, 'index']);
+Route::get('/eas/create', [NilaiController::class, 'create']);
+Route::post('/eas', [NilaiController::class, 'store']);
