@@ -75,8 +75,12 @@ class PengaduanController extends Controller
             'file_pendukung'      => $path
         ]);
 
+         if ($request->input('source') === 'admin') {
+        return redirect()->route('admin.pengaduan.index')->with('success', 'Pengaduan baru telah berhasil ditambahkan!');
+    } else {
         return redirect()->route('pengaduan.create')->with('success', 'Pengaduan Anda telah berhasil dikirim!');
     }
+}
 
     /**
      * Menampilkan detail satu pengaduan.

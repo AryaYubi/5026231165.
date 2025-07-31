@@ -19,16 +19,25 @@
     <div class="card">
         <div class="card-header">
             <div class="row justify-content-between align-items-center">
+                {{-- Judul di Kiri --}}
                 <div class="col-md-6">
                     <h5 class="mb-0">Daftar Laporan</h5>
                 </div>
-                <div class="col-md-4">
-                    <form action="{{ url()->current() }}" method="GET">
-                        <div class="input-group">
-                            <input type="text" name="cari" class="form-control" placeholder="Cari nama pelapor..." value="{{ request('cari') }}">
-                            <button class="btn btn-primary" type="submit">Cari</button>
-                        </div>
-                    </form>
+
+                {{-- Aksi di Kanan (Tombol Tambah & Form Cari) --}}
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#tambahLaporanModal">
+                            <i class="bi bi-plus-circle"></i> Tambah
+                        </button>
+
+                        <form action="{{ url()->current() }}" method="GET">
+                            <div class="input-group">
+                                <input type="text" name="cari" class="form-control" placeholder="Cari nama pelapor..." value="{{ request('cari') }}">
+                                <button class="btn btn-primary" type="submit">Cari</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,13 +48,22 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle">
+                 <table class="table table-bordered table-striped align-middle">
                     <thead class="text-center">
                         <tr>
                             <th>No</th>
                             <th>Pelapor</th>
-                            {{-- PERUBAHAN HEADER TABEL --}}
                             <th>Jenis Pengaduan</th>
                             <th>File Pendukung</th>
                             <th>Tanggal Laporan</th>
@@ -58,8 +76,6 @@
                         <tr>
                             <td class="text-center">{{ $data->firstItem() + $index }}</td>
                             <td>{{ $p->nama_lengkap }}</td>
-
-                            {{-- PERUBAHAN ISI KOLOM --}}
                             <td class="text-center">{{ ucfirst($p->jenis_pengaduan) }}</td>
                             <td class="text-center">
                                 @if($p->file_pendukung)
@@ -70,16 +86,14 @@
                                     -
                                 @endif
                             </td>
-
                             <td class="text-center">{{ \Carbon\Carbon::parse($p->created_at)->translatedFormat('d M Y') }}</td>
                             <td class="text-center">
                                 @php $status = strtolower(trim($p->status)); @endphp
-
                                 @if($status == 'selesai')
                                     <span class="badge bg-success">Selesai</span>
                                 @elseif($status == 'diproses')
                                     <span class="badge bg-primary">Diproses</span>
-                                @else {{-- Default untuk 'verifikasi' --}}
+                                @else
                                     <span class="badge bg-warning">Verifikasi</span>
                                 @endif
                             </td>
@@ -105,3 +119,72 @@
     </div>
 
 @endsection
+
+@push('scripts')
+
+{{-- MODAL UNTUK TAMBAH LAPORAN --}}
+<div class="modal fade" id="tambahLaporanModal" tabindex="-1" aria-labelledby="tambahLaporanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tambahLaporanModalLabel">Form Tambah Pengaduan Baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+
+        {{-- Form di dalam modal, dari pengaduan/create --}}
+        <form action="{{ route('admin.pengaduan.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+{{-- hidden input --}}
+             <input type="hidden" name="source" value="admin">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nama_lengkap" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="alamat" name="alamat" rows="2" required>{{ old('alamat') }}</textarea>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="no_ktp" class="form-label">No. KTP <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="no_ktp" name="no_ktp" value="{{ old('no_ktp') }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="no_hp" class="form-label">No. Handphone</label>
+                    <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ old('no_hp') }}">
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="jenis_pengaduan" class="form-label">Jenis Pengaduan <span class="text-danger">*</span></label>
+                    <select class="form-select" id="jenis_pengaduan" name="jenis_pengaduan" required>
+                        <option value="">-- Pilih Jenis --</option>
+                        <option value="tabungan" {{ old('jenis_pengaduan') == 'tabungan' ? 'selected' : '' }}>Tabungan</option>
+                        <option value="deposito" {{ old('jenis_pengaduan') == 'deposito' ? 'selected' : '' }}>Deposito</option>
+                        <option value="kredit" {{ old('jenis_pengaduan') == 'kredit' ? 'selected' : '' }}>Kredit</option>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="ringkasan_pengaduan" class="form-label">Ringkasan Pengaduan <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="ringkasan_pengaduan" name="ringkasan_pengaduan" rows="3" required>{{ old('ringkasan_pengaduan') }}</textarea>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="file_pendukung" class="form-label">File Pendukung (Opsional)</label>
+                    <input class="form-control" type="file" id="file_pendukung" name="file_pendukung">
+                    <small class="text-muted">Tipe file: JPG, PNG, PDF. Maksimal 2MB.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary">Kirim Pengaduan</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+@endpush

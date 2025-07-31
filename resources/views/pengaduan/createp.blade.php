@@ -35,7 +35,7 @@
         <div class="card-body">
             <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-
+                    <input type="hidden" name="source" value="public">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Nasabah</label>
                     <input type="email" name="email" id="email" class="form-control" placeholder="contoh: nasabah@gmail.com" required value="{{ old('email') }}">
