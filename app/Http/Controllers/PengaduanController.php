@@ -55,7 +55,7 @@ class PengaduanController extends Controller
 
         $path = null;
         if ($request->hasFile('file_pendukung')) {
-            $path = $request->file('file_pendukung')->store('public/files');
+            $path = $request->file('file_pendukung')->store('files', 'public');
         }
 
         $tanggal = now()->format('Y-m-d');
