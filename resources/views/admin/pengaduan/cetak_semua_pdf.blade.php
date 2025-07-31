@@ -4,17 +4,17 @@
     <title>Rekapitulasi Semua Laporan</title>
     <style>
       @page {
-            margin-top: 150px;    /* Top margin */
+            margin-top: 130px;    /* Top margin */
             margin-right: 30px;  /* Right margin */
             margin-bottom: 50px; /* Bottom margin */
             margin-left: 30px;   /* Left margin */
         }
 
-        body { font-family: 'Helvetica', sans-serif; font-size: 10px; }
+        body { font-family: 'Helvetica', sans-serif; font-size: 12px; }
 
         header {
             position: fixed;
-            top: -130px;
+            top: -120px;
             left: 0;
             right: 0;
             height: 80px;
@@ -29,7 +29,7 @@
             margin-top: 10px;
         }
 
-        .title-section h3, .title-section p { margin: 0; }
+        .title-section h1, .title-section p { margin: 0; }
 
         footer {
             position: fixed;
@@ -84,20 +84,29 @@
             <thead>
                 <tr>
                     <th style="width: 5%;">No</th>
-                    <th style="width: 15%;">Pelapor</th>
-                    <th style="width: 20%;">Jenis Pengaduan</th>
+                    <th style="width: 20%;">Pelapor</th>
+                    <th style="width: 15%;">Jenis Pengaduan</th>
                     <th style="width: 20%;">Tanggal Laporan</th>
-                    <th style="width: 15%;">Status</th>
+                    <th style="width: 15%;">File Pendukung</th>
+                    <th style="width: 10%;">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($semua_laporan as $index => $laporan)
                 <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $laporan->nama_lengkap }}</td>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ Illuminate\Support\Str::title($laporan->nama_lengkap) }}</td>
                     <td>{{ ucfirst($laporan->jenis_pengaduan) }}</td>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($laporan->created_at)->timezone('Asia/Jakarta')->locale('id_ID')->isoFormat('DD MMMM YYYY HH:mm') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($laporan->created_at)->timezone('Asia/Jakarta')->locale('id_ID')->isoFormat('DD MMMM YYYY HH:mm') }}</td>
+                    <td>
+                        @if($laporan->file_pendukung)
+                            Ada
+                        @else
+                            Tidak Ada
+                        @endif
+                    </td>
                     <td class="text-center">
+
                         @php $status = strtolower(trim($laporan->status)); @endphp
                         @if($status == 'selesai')
                             <span class="badge bg-success">Selesai</span>
@@ -110,7 +119,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center">Tidak ada data laporan yang ditemukan.</td>
+                    <td colspan="6" class="text-center">Tidak ada data laporan yang ditemukan.</td>
                 </tr>
                 @endforelse
             </tbody>

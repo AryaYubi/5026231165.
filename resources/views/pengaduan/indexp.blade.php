@@ -17,40 +17,53 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-
-<div class="row justify-content-between align-items-center">
-    <div class="col-md-5">
-        <h5 class="mb-0">Daftar Laporan</h5>
-    </div>
-
-    <div class="col-md-7">
-        <div class="d-flex justify-content-end">
-            <!-- Tombol Tambah Laporan -->
-            <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#tambahLaporanModal">
-                <i class="bi bi-plus-circle"></i> Tambah
-            </button>
-
-            <!-- Tombol Cetak Rekap Baru -->
-             @if(request()->routeIs('admin.pengaduan.index'))
-            <a href="{{ route('admin.laporan.cetakSemua', request()->query()) }}" class="btn btn-danger me-2" target="_blank">
-                <i class="bi bi-printer"></i> Cetak PDF
-            </a>
-            @endif
-
-            <!-- Form Pencarian -->
-            <form action="{{ url()->current() }}" method="GET">
-                <div class="input-group">
-                    <input type="text" name="cari" class="form-control" placeholder="Cari..." value="{{ request('cari') }}">
-                    <button class="btn btn-primary" type="submit">Cari</button>
+       <div class="card-header">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-md-auto">
+                    <h5 class="mb-0">Daftar Laporan</h5>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>
+                <div class="col-md-auto">
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Tombol Tambah Laporan -->
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahLaporanModal">
+                            <i class="bi bi-plus-circle"></i> Tambah
+                        </button>
 
+                        <!-- Tombol Cetak PDF -->
+                        <a href="{{ route('admin.laporan.cetakSemua', array_merge(request()->query(), ['status' => $status ?? 'semua'])) }}" class="btn btn-danger" target="_blank">
+                        <i class="bi bi-printer"></i> Cetak PDF
+                            </a>
+
+
+
+                        <!-- Form Filter tgl dan jenis -->
+                        <form action="{{ url()->current() }}" method="GET" class="d-flex gap-2">
+
+                                <label for="tanggal_mulai" class="form-label visually-hidden">Tanggal Mulai</label>
+                                <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai" value="{{ request('tanggal_mulai') }}" title="Tanggal Mulai">
+
+                            <span>-</span>
+
+                                <label for="tanggal_akhir" class="form-label visually-hidden">Tanggal Akhir</label>
+                                <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir" value="{{ request('tanggal_akhir') }}" title="Tanggal Akhir">
+
+
+                            <select name="jenis" id="jenis" class="form-select" style="width: 150px;">
+                                <option value="">Semua Jenis</option>
+                                <option value="tabungan" {{ request('jenis') == 'tabungan' ? 'selected' : '' }}>Tabungan</option>
+                                <option value="deposito" {{ request('jenis') == 'deposito' ? 'selected' : '' }}>Deposito</option>
+                                <option value="kredit" {{ request('jenis') == 'kredit' ? 'selected' : '' }}>Kredit</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+
+
         <div class="card-body">
             @if(session('success'))
                 <div class="alert alert-success">
@@ -146,8 +159,10 @@
         {{-- Form di dalam modal, dari pengaduan/create --}}
         <form action="{{ route('admin.pengaduan.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-{{-- hidden input --}}
-             <input type="hidden" name="source" value="admin">
+
+            {{-- hidden input --}}
+                <input type="hidden" name="source" value="admin">
+
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="nama_lengkap" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
@@ -197,4 +212,6 @@
     </div>
   </div>
 </div>
+
+
 @endpush

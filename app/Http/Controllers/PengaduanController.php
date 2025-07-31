@@ -11,15 +11,13 @@ use PDF;
 
 class PengaduanController extends Controller
 {
-    // ... (fungsi index, create, store, dll. tidak perlu diubah) ...
     public function index(Request $request)
     {
         $query = Pengaduan::query();
-       if ($request->has('cari') && $request->cari != '') {
-    $query->search($request->cari);
-}
-        $data = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('pengaduan.indexp', compact('data'));
+        $query->filter($request->only(['tanggal_mulai', 'tanggal_akhir', 'jenis']));
+        $data = $query->latest()->paginate(10);
+        $status = 'semua';
+        return view('pengaduan.indexp', compact('data', 'status'));
     }
 
     public function create()
@@ -103,8 +101,6 @@ class PengaduanController extends Controller
         return redirect()->route('admin.pengaduan.show', $pengaduan->id)->with('success', 'Laporan berhasil diperbarui.');
     }
 
-
-    // ... (fungsi destroy, showVerifikasi, dll. tidak perlu diubah) ...
     public function destroy(Pengaduan $pengaduan)
     {
         $pengaduan->delete();
@@ -114,31 +110,28 @@ class PengaduanController extends Controller
     public function showVerifikasi(Request $request)
     {
         $query = Pengaduan::where('status', 'verifikasi');
-       if ($request->has('cari') && $request->cari != '') {
-    $query->search($request->cari);
-}
-        $data = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('pengaduan.indexp', compact('data'));
+        $query->filter($request->only(['tanggal_mulai', 'tanggal_akhir', 'jenis']));
+        $data = $query->latest()->paginate(10);
+        $status = 'verifikasi'; // Menandakan halaman ini adalah 'verifikasi'
+        return view('pengaduan.indexp', compact('data', 'status'));
     }
 
     public function showDiproses(Request $request)
     {
         $query = Pengaduan::where('status', 'diproses');
-        if ($request->has('cari') && $request->cari != '') {
-    $query->search($request->cari);
-}
-        $data = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('pengaduan.indexp', compact('data'));
+        $query->filter($request->only(['tanggal_mulai', 'tanggal_akhir', 'jenis']));
+        $data = $query->latest()->paginate(10);
+        $status = 'diproses'; // Menandakan halaman ini adalah 'diproses'
+        return view('pengaduan.indexp', compact('data', 'status'));
     }
 
     public function showSelesai(Request $request)
     {
         $query = Pengaduan::where('status', 'selesai');
-       if ($request->has('cari') && $request->cari != '') {
-    $query->search($request->cari);
-}
-        $data = $query->orderBy('created_at', 'desc')->paginate(10);
-        return view('pengaduan.indexp', compact('data'));
+        $query->filter($request->only(['tanggal_mulai', 'tanggal_akhir', 'jenis']));
+        $data = $query->latest()->paginate(10);
+        $status = 'selesai'; // Menandakan halaman ini adalah 'selesai'
+        return view('pengaduan.indexp', compact('data', 'status'));
     }
 
      public function cetakPdf($id)
@@ -152,30 +145,25 @@ class PengaduanController extends Controller
     }
 
 
-
-
-
-
-    public function cetakSemuaLaporan(Request $request)  {
-
+public function cetakSemuaLaporan(Request $request){
     $query = \App\Models\Pengaduan::query();
+    if ($request->has('status') && in_array($request->status, ['verifikasi', 'diproses', 'selesai'])) {
+            $query->where('status', $request->status);
+        }
 
-    if ($request->has('cari') && $request->cari != '') {
-        $query->search($request->cari);
+        //  filter tanggal dan jenis
+        $query->filter($request->only(['tanggal_mulai', 'tanggal_akhir', 'jenis']));
+
+        $laporan = $query->latest()->get();
+
+        $data = [
+            'semua_laporan' => $laporan,
+            'tanggal_cetak' => now()->timezone('Asia/Jakarta')->translatedFormat('d F Y')
+        ];
+
+        $pdf = \PDF::loadView('admin.pengaduan.cetak_semua_pdf', $data);
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->stream('rekapitulasi-laporan.pdf');
     }
-
-    $laporan = $query->orderBy('created_at', 'desc')->get();
-
-    $data = [
-        'semua_laporan' => $laporan,
-        'tanggal_cetak' => now()->timezone('Asia/Jakarta')->translatedFormat('d F Y')
-    ];
-
-    $pdf = \PDF::loadView('admin.pengaduan.cetak_semua_pdf', $data);
-
-    $pdf->setPaper('a4', 'landscape');
-
-    return $pdf->stream('rekapitulasi-laporan.pdf');
-}
 
 }
