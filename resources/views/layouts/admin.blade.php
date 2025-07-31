@@ -24,7 +24,8 @@
 
     <div class="sidebar p-3">
         <h4 class="text-center mb-4">
-            <a href="#" class="text-white text-decoration-none">BANK GALUNGGUNG</a>
+            <img src="{{ asset('images/logoGalunggung.png') }}" alt="Logo Bank" style="max-width: 200px; height: auto;">
+
         </h4>
        <nav>
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">

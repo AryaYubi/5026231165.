@@ -18,27 +18,37 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="row justify-content-between align-items-center">
-                {{-- Judul di Kiri --}}
-                <div class="col-md-6">
-                    <h5 class="mb-0">Daftar Laporan</h5>
-                </div>
 
-                {{-- Aksi di Kanan (Tombol Tambah & Form Cari) --}}
-                <div class="col-md-6">
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#tambahLaporanModal">
-                            <i class="bi bi-plus-circle"></i> Tambah
-                        </button>
+<div class="row justify-content-between align-items-center">
+    <div class="col-md-5">
+        <h5 class="mb-0">Daftar Laporan</h5>
+    </div>
 
-                        <form action="{{ url()->current() }}" method="GET">
-                            <div class="input-group">
-                                <input type="text" name="cari" class="form-control" placeholder="Cari nama pelapor..." value="{{ request('cari') }}">
-                                <button class="btn btn-primary" type="submit">Cari</button>
-                            </div>
-                        </form>
-                    </div>
+    <div class="col-md-7">
+        <div class="d-flex justify-content-end">
+            <!-- Tombol Tambah Laporan -->
+            <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#tambahLaporanModal">
+                <i class="bi bi-plus-circle"></i> Tambah
+            </button>
+
+            <!-- Tombol Cetak Rekap Baru -->
+             @if(request()->routeIs('admin.pengaduan.index'))
+            <a href="{{ route('admin.laporan.cetakSemua', request()->query()) }}" class="btn btn-danger me-2" target="_blank">
+                <i class="bi bi-printer"></i> Cetak PDF
+            </a>
+            @endif
+
+            <!-- Form Pencarian -->
+            <form action="{{ url()->current() }}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="cari" class="form-control" placeholder="Cari..." value="{{ request('cari') }}">
+                    <button class="btn btn-primary" type="submit">Cari</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
             </div>
         </div>
         <div class="card-body">

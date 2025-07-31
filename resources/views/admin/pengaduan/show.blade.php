@@ -4,7 +4,16 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3>Detail Laporan</h3>
-        <a href="{{ route('admin.pengaduan.index') }}" class="btn btn-secondary">← Kembali ke Daftar</a>
+        <div>
+            {{-- TOMBOL CETAK PDF BARU --}}
+            <a href="{{ route('admin.pengaduan.cetak', $pengaduan->id) }}" class="btn btn-danger" target="_blank">
+                <i class="bi bi-printer me-2"></i> Cetak PDF
+            </a>
+
+            <a href="{{ route('admin.pengaduan.index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-2"></i> Kembali
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -41,7 +50,8 @@
                             <td><strong>File Pendukung</strong></td>
                             <td>:
                                 @if($pengaduan->file_pendukung)
-                                    <a href="{{ asset('storage/' . $pengaduan->file_pendukung) }}" target="_blank">Lihat File</a>
+                                    {{-- Menggunakan Storage::url() untuk path yang benar --}}
+                                    <a href="{{ Illuminate\Support\Facades\Storage::url($pengaduan->file_pendukung) }}" target="_blank">Lihat File</a>
                                 @else
                                     Tidak ada
                                 @endif
@@ -50,36 +60,31 @@
                     </table>
                 </div>
             </div>
-
-
-
-
         </div>
 
         {{-- KOLOM KANAN: STATUS & AKSI --}}
         <div class="col-md-4">
 
            <div id="status-display">
-    <div class="card">
-        <div class="card-header">Status Penanganan</div>
-        <div class="card-body">
-            <p><strong>Status Terakhir:</strong> <span class="badge bg-primary">{{ Str::ucfirst($pengaduan->status) }}</span></p>
-            <p><strong>Keterangan Terakhir:</strong></p>
-            <p class="text-muted fst-italic">
-                {{-- Tampilkan keterangan jika ada, jika tidak, tampilkan pesan default --}}
-                @if($pengaduan->keterangan)
-                    {{ $pengaduan->keterangan }}
-                @else
-                    Belum ada keterangan yang ditambahkan.
-                @endif
-            </p>
-            <div class="d-grid">
-                <button id="btn-edit-status" class="btn btn-warning">Edit Laporan / Update Status</button>
+                <div class="card">
+                    <div class="card-header">Status Penanganan</div>
+                    <div class="card-body">
+                        <p><strong>Status Terakhir:</strong> <span class="badge bg-primary">{{ Str::ucfirst($pengaduan->status) }}</span></p>
+                        <p><strong>Keterangan Terakhir:</strong></p>
+                        <p class="text-muted fst-italic">
+                            @if($pengaduan->keterangan)
+                                {{ $pengaduan->keterangan }}
+                            @else
+                                Belum ada keterangan yang ditambahkan.
+                            @endif
+                        </p>
+                        <div class="d-grid">
+                            <button id="btn-edit-status" class="btn btn-warning">Edit Laporan / Update Status</button>
+                        </div>
+                    </div>
+                     @include('admin.pengaduan.partials.progress_section')
+                </div>
             </div>
-        </div>
-         @include('admin.pengaduan.partials.progress_section')
-    </div>
-</div>
 
             <div id="status-edit-form" style="display: none;">
                 <div class="card">

@@ -15,10 +15,18 @@ class ProgressLaporan extends Model
         'pengaduan_id',
         'judul',
         'keterangan',
+        'user_id',
+        'status',
     ];
 
     public function pengaduan()
     {
         return $this->belongsTo(Pengaduan::class);
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

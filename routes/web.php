@@ -87,8 +87,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 
+
 });
-
-
-// Memuat rute otentikasi (login, logout, dll.) dari Laravel Breeze.
+// autentikasi (login, logout, dll.)
 require __DIR__.'/auth.php';
+
+//cetak PDF laporan pengaduan
+Route::get('/pengaduan/{id}/cetak', [PengaduanController::class, 'cetakPdf'])->name('admin.pengaduan.cetak');
+
+
+Route::get('/laporan/cetak-semua', [PengaduanController::class, 'cetakSemuaLaporan'])->name('admin.laporan.cetakSemua');

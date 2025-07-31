@@ -42,14 +42,13 @@
 </div>
 
 <div class="card mt-4">
-    {{-- PERUBAHAN DI SINI --}}
+
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Laporan Terbaru</h5>
         <a href="{{ route('admin.pengaduan.index') }}" class="btn btn-primary btn-sm">
             Lihat Semua
         </a>
     </div>
-    {{-- AKHIR PERUBAHAN --}}
 
     <div class="card-body">
         <div class="table-responsive">
@@ -96,6 +95,88 @@
     </div>
 </div>
 
-{{-- Untuk grafik, kita siapkan tempatnya dulu. Implementasinya memerlukan library JavaScript seperti Chart.js. --}}
+
+<div class="row mt-4">
+    {{-- Jenis Pengaduan --}}
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Jenis Pengaduan
+            </div>
+            <div class="card-body">
+
+                <div style="position: relative; height:350px">
+                    <canvas id="jenisPengaduanChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Status Laporan --}}
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Status Laporan
+            </div>
+            <div class="card-body">
+
+                <div style="position: relative; height:350px">
+                    <canvas id="statusLaporanChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Controller convert ke format js
+    const jenisLabels = @json($jenisLabels);
+    const jenisData = @json($jenisTotal);
+    const statusLabels = @json($statusLabels);
+    const statusData = @json($statusTotal);
+
+    //  Jenis Pengaduan
+    const ctxJenis = document.getElementById('jenisPengaduanChart');
+    new Chart(ctxJenis, {
+        type: 'pie',
+        data: {
+            labels: jenisLabels,
+            datasets: [{
+                label: 'Jumlah Laporan',
+                data: jenisData,
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        }
+    });
+
+    // Status Laporan
+    const ctxStatus = document.getElementById('statusLaporanChart');
+    new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                label: 'Jumlah Laporan',
+                data: statusData,
+                backgroundColor: [
+                    'rgb(255, 205, 86)', // Kuning (Verifikasi)
+                    'rgb(54, 162, 235)',  // Biru (Diproses)
+                    'rgb(75, 192, 192)'   // Hijau (Selesai)
+                ],
+                hoverOffset: 4
+            }]
+        }
+    });
+</script>
+@endpush
 
 @endsection
