@@ -151,6 +151,11 @@ class PengaduanController extends Controller
         return $pdf->stream('laporan-pengaduan-'.$pengaduan->kode_pengaduan.'.pdf');
     }
 
+
+
+
+
+
     public function cetakSemuaLaporan(Request $request)  {
 
     $query = \App\Models\Pengaduan::query();

@@ -31,7 +31,7 @@
                     <span class="badge bg-primary">{{ Str::ucfirst($pengaduan->status) }}</span>
                 </div>
                 <div class="card-body">
-                    <small class="text-muted">Dilaporkan pada {{ $pengaduan->created_at->format('d M Y H:i') }}</small>
+                    <small class="text-muted">Dilaporkan pada {{ $pengaduan->created_at->format('d F Y H:i') }}</small>
                     <hr>
 
                     <h5>Informasi Pelapor</h5>
@@ -50,7 +50,7 @@
                             <td><strong>File Pendukung</strong></td>
                             <td>:
                                 @if($pengaduan->file_pendukung)
-                                    {{-- Menggunakan Storage::url() untuk path yang benar --}}
+
                                     <a href="{{ Illuminate\Support\Facades\Storage::url($pengaduan->file_pendukung) }}" target="_blank">Lihat File</a>
                                 @else
                                     Tidak ada

@@ -67,7 +67,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $laporan->nama_lengkap }}</td>
-                        <td>{{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d M Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d F Y H:i') }}</td>
                         <td>
                             @php $status = strtolower(trim($laporan->status)); @endphp
                             @if($status == 'selesai')

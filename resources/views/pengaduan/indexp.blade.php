@@ -96,7 +96,7 @@
                                     -
                                 @endif
                             </td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($p->created_at)->translatedFormat('d M Y') }}</td>
+                            <td class="text-center">{{ \Carbon\Carbon::parse($p->created_at)->translatedFormat('d F Y H:i') }}</td>
                             <td class="text-center">
                                 @php $status = strtolower(trim($p->status)); @endphp
                                 @if($status == 'selesai')

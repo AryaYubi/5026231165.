@@ -55,7 +55,7 @@
             </tr>
              <tr>
                 <th>Tanggal Laporan</th>
-                <td>: {{ \Carbon\Carbon::parse($pengaduan->created_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y, H:i') }} WIB</td>
+                <td>: {{ \Carbon\Carbon::parse($pengaduan->created_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y H:i') }} WIB</td>
             </tr>
             <tr>
                 <th>Ringkasan Masalah</th>
@@ -91,7 +91,7 @@
             <tbody>
                 @forelse($pengaduan->progress as $progress)
                 <tr>
-                    <td>{{ \Carbon\Carbon::parse($progress->created_at)->timezone('Asia/Jakarta')->translatedFormat('d M Y, H:i') }} WIB</td>
+                    <td>{{ \Carbon\Carbon::parse($progress->created_at)->timezone('Asia/Jakarta')->translatedFormat('d F Y H:i') }} WIB</td>
                     <td>{{ $progress->judul }}</td>
                     <td>{{ $progress->keterangan }}</td>
                 </tr>
